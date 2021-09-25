@@ -53,5 +53,24 @@ class CustomerRepositoryIT {
 		assertNotNull(customer, "El customer es nulo, no se pudo grabar");
 		
 	}
+	
+	@Test
+	@Order(2)
+	void debeModificarUnCustomer() {
+		//Arrange
+		Integer idCustomer = 14505050;
+		Customer customer = customerRepository.findById(idCustomer).get();
+	
+		String nameExpected = "Homero Ibarra";
+		customer.setName("Homero Ibarra");
+		
+		//Act
+		customer = customerRepository.save(customer);
+		
+		//Assert
+		assertNotNull(customer, "El customer es nulo, no se pudo grabar");
+		assertEquals(nameExpected, customer.getName());
+		
+	}
 
 }

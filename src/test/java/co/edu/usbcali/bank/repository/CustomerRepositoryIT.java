@@ -2,6 +2,7 @@ package co.edu.usbcali.bank.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -70,6 +71,51 @@ class CustomerRepositoryIT {
 		//Assert
 		assertNotNull(customer, "El customer es nulo, no se pudo grabar");
 		assertEquals(nameExpected, customer.getName());
+		
+	}
+	
+	@Test
+	@Order(3)
+	void debeBorrarUnCustomer() {
+		//Arrange
+		Integer idCustomer = 14505050;
+		Customer customer = customerRepository.findById(idCustomer).get();
+		Optional<Customer> customerOptional = null;
+		
+		//Act
+		customerRepository.delete(customer);
+		customerOptional = customerRepository.findById(idCustomer);
+		
+		//Assert
+		assertFalse(customerOptional.isPresent(), "El customer no lo borró");
+		
+	}
+	
+	@Test
+	@Order(4)
+	void debeConsultarCustomers() {
+		//Arrange
+		List<Customer> customers = null;
+		
+		//Act
+		customers = customerRepository.findAll();
+		
+		//Assert
+		assertFalse(customers.isEmpty(), "No pudo consultar todos los clientes");
+		
+	}
+	
+	@Test
+	@Order(5)
+	void debeConsultarCustomerEnableYes() {
+		//Arrange
+		List<Customer> customers = null;
+		
+		//Act
+		customers = customerRepository.findByEnable("Y");
+		
+		//Assert
+		assertFalse(customers.isEmpty(), "No pudo consultar todos los clientes que están activos");
 		
 	}
 

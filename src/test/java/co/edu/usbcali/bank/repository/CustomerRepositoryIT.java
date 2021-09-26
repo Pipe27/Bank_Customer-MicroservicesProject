@@ -2,6 +2,7 @@ package co.edu.usbcali.bank.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import co.edu.usbcali.bank.domain.Customer;
 import co.edu.usbcali.bank.domain.DocumentType;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
+@Slf4j
 class CustomerRepositoryIT {
 	
 	@Autowired
@@ -113,6 +116,12 @@ class CustomerRepositoryIT {
 		
 		//Act
 		customers = customerRepository.findByEnable("Y");
+		
+		/* for(Customer customer : customers) {
+			log.info(customer.getName());
+		} */
+		
+		customers.forEach(customer -> log.info(customer.getName()));
 		
 		//Assert
 		assertFalse(customers.isEmpty(), "No pudo consultar todos los clientes que están activos");

@@ -65,7 +65,7 @@ public class Customer implements java.io.Serializable {
 
 	@Column(name = "phone", nullable = false)
 	@NotNull
-	@Size(min = 7, max = 10)
+	@Size(min = 7, max = 15)
 	private String phone;
 	
 	@Column(name = "token")

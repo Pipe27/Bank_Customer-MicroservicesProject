@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,14 +78,47 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void delete(Customer entity) throws Exception {
-		// TODO Auto-generated method stub
+		if(entity == null) {
+			throw new Exception("El customer es nulo");
+		}
+		
+		if(entity.getCustId() == null) {
+			throw new Exception("El id del customer es nulo");
+		}
+		
+		if(customerRepository.existsById(entity.getCustId()) == false) {
+			throw new Exception("El customer no existe");
+		}
+		
+		findById(entity.getCustId()).ifPresent(customer -> {
+			if(customer.getAccounts() != null && customer.getAccounts().isEmpty() == false) {
+				throw new RuntimeException("El customer que intenta eliminar, tiene cuentas asociadas");
+			}
+			
+			if(customer.getRegisteredAccounts() != null && customer.getRegisteredAccounts().isEmpty() == false) {
+				throw new RuntimeException("El customer que intenta eliminar, tiene cuentas registradas asociadas");
+			}
+			
+		});
+		
+		customerRepository.deleteById(entity.getCustId());
 		
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void deleteById(Integer id) throws Exception {
-		// TODO Auto-generated method stub
+		if(id == null) {
+			throw new Exception("El id del customer es nulo");
+		}
+		
+		if(findById(id).isPresent() == false) {
+			throw new Exception("El customer no existe");
+		}
+		
+		delete(findById(id).get());
 		
 	}
 

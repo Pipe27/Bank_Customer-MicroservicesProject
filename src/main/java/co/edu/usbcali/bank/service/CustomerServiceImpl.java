@@ -124,12 +124,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public void validate(Customer entity) throws Exception {
-		
 		Set<ConstraintViolation<Customer>> constraintViolations = validator.validate(entity);
 		if(constraintViolations.isEmpty() == false) {
 			throw new ConstraintViolationException(constraintViolations);
 		}
-		
 	}
 
 }
